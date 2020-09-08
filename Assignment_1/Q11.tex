@@ -1,0 +1,173 @@
+\documentclass{beamer}
+
+\mode<presentation>
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{schemabloc}
+\usetikzlibrary{circuits}
+%\usepackage{advdate}
+\usepackage{adjustbox}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-}
+\usetheme{CambridgeUS}
+\usecolortheme{rose}
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=1ex,right]{author in head/foot}%
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\setbeamertemplate{navigation symbols}{}
+
+\providecommand{\nCr}[2]{\,^{#1}C_{#2}} % nCr
+\providecommand{\nPr}[2]{\,^{#1}P_{#2}} % nPr
+\providecommand{\mbf}{\mathbf}
+\providecommand{\pr}[1]{\ensuremath{\Pr\left(#1\right)}}
+\providecommand{\qfunc}[1]{\ensuremath{Q\left(#1\right)}}
+\providecommand{\sbrak}[1]{\ensuremath{{}\left[#1\right]}}
+\providecommand{\lsbrak}[1]{\ensuremath{{}\left[#1\right.}}
+\providecommand{\rsbrak}[1]{\ensuremath{{}\left.#1\right]}}
+\providecommand{\brak}[1]{\ensuremath{\left(#1\right)}}
+\providecommand{\lbrak}[1]{\ensuremath{\left(#1\right.}}
+\providecommand{\rbrak}[1]{\ensuremath{\left.#1\right)}}
+\providecommand{\cbrak}[1]{\ensuremath{\left\{#1\right\}}}
+\providecommand{\lcbrak}[1]{\ensuremath{\left\{#1\right.}}
+\providecommand{\rcbrak}[1]{\ensuremath{\left.#1\right\}}}
+\theoremstyle{remark}
+\newtheorem{rem}{Remark}
+\newcommand{\sgn}{\mathop{\mathrm{sgn}}}
+\providecommand{\abs}[1]{\left\vert#1\right\vert}
+\providecommand{\res}[1]{\Res\displaylimits_{#1}} 
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\providecommand{\mtx}[1]{\mathbf{#1}}
+\providecommand{\mean}[1]{E\left[ #1 \right]}
+\providecommand{\fourier}{\overset{\mathcal{F}}{ \rightleftharpoons}}
+%\providecommand{\hilbert}{\overset{\mathcal{H}}{ \rightleftharpoons}}
+\providecommand{\system}{\overset{\mathcal{H}}{ \longleftrightarrow}}
+	%\newcommand{\solution}[2]{\textbf{Solution:}{#1}}
+%\newcommand{\solution}{\noindent \textbf{Solution: }}
+\providecommand{\dec}[2]{\ensuremath{\overset{#1}{\underset{#2}{\gtrless}}}}
+\newcommand{\myvec}[1]{\ensuremath{\begin{pmatrix}#1\end{pmatrix}}}
+\let\vec\mathbf
+
+\lstset{
+%language=C,
+frame=single, 
+breaklines=true,
+columns=fullflexible
+}
+
+\numberwithin{equation}{section}
+
+\title{Control Systems Problem 11}
+\author{Gautham Yadagiri\\ EE19BTECH11008\\IIT Hyderabad.}
+
+\date{\today} 
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section*{Content}
+\begin{frame}
+\tableofcontents
+\end{frame}
+\section{Problem}
+\begin{frame}
+\frametitle{Problem}
+A system is described by the following differential
+equation
+
+\begin{equation}
+\frac{d^2x}{dt^2}+2\frac{dx}{dt}+3x=1
+\end{equation}
+
+with the initial conditions x(0) = 1, x'(0) = -1.
+Show a block diagram of the system, giving its
+transfer function and all pertinent inputs and outputs.
+(Hint: the initial conditions will show up as
+added inputs to an effective system with zero initial
+conditions.)
+\end{frame}
+
+
+\section{Solution}
+\begin{frame}
+\frametitle{Solution}
+Consider the following equation
+\begin{equation}
+\frac{d^2x}{dt^2}+2\frac{dx}{dt}+3x=r(t)
+\end{equation}
+where r(t)=1.
+\vspace{2mm}
+
+On applying laplace transform on both sides we get
+\begin{align}
+s^2X(s)-s+1+2sX(s)-2+3X(s) = R(s)
+\nonumber\\
+(s^2+2s+3)X(s)-s-1 = R(s)
+\nonumber\\
+X(s) = \frac{R(s)}{(s^2+2s+3)}+\frac{s+1}{(s^2+2s+3)}
+\end{align}
+
+where R(s) = $\frac{1}{s}$
+
+\end{frame}
+
+\section{Block Diagram}
+\begin{frame}
+\frametitle{Block Diagram}
+\begin{equation}
+    X(s) = \frac{R(s)}{(s^2+2s+3)}+\frac{s+1}{(s^2+2s+3)}
+\end{equation}
+Here, s+1 is due to the initial conditions and are getting added to the input R(s). So, the block diagram is 
+
+\vspace{5mm}
+
+\begin{tikzpicture}[block/.style={rectangle, draw=black!80, very thick, text width=30mm, minimum height=15mm}]
+
+    \node[block](TF){\hspace{7mm}$\frac{1}{(s^2+2s+3)}$};
+    \sbCompSum[-12]{a}{}{}{+}{+}{}
+    \draw[->][black, thick] (-7,0)--node[above] {R(s)}(a);
+    \draw[->][black, thick] (a)--(TF);
+    \draw[->][black, thick] (-4.6,-2)--node[right] {s+1}(a);
+    \draw[->][black, thick] (TF)--node[above] {X(s)}(4,0);
+\end{tikzpicture}
+
+\end{frame}
+
+\section{Plots}
+\begin{frame}
+\frametitle{Plots}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\columnwidth]{Bode.png}
+    \caption{Bode Plot of Transfer Function}
+    \label{fig:my_label}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Plots}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\columnwidth]{Output.png}
+    \caption{Output Response}
+    \label{fig:my_label}
+\end{figure}
+\end{frame}
+
+
+
+\end{document}
